@@ -8,13 +8,6 @@ import { MagicalParticles } from '../components/MagicalParticles';
 
 //Character Images
 
-import harryPotterImg from '../images/characters/harry-potter.jpg';
-import hermoine from '../images/characters/hermoine.webp';
-import severus from '../images/characters/severus-snape.jpg';
-import ron from '../images/characters/ron.jpg';
-import draco from '../images/characters/draco.jpg';
-import luna from '../images/characters/luna.jpg';
-import albus from '../images/characters/albus.webp';
 
 const CHARACTERS: Character[] = [{
   id: 'harry-potter',
@@ -22,49 +15,49 @@ const CHARACTERS: Character[] = [{
   house: 'Gryffindor',
   role: 'The Boy Who Lived',
   description: 'The only known survivor of the Killing Curse and the defeater of Lord Voldemort.',
-  imageUrl: harryPotterImg
+  imageUrl: '/images/characters/harry-potter.jpg',
 }, {
   id: 'hermione-granger',
   name: 'Hermione Granger',
   house: 'Gryffindor',
   role: 'Brightest Witch of Her Age',
   description: 'A Muggle-born witch who became the Minister for Magic.',
-  imageUrl: hermoine
+  imageUrl:'/images/characters/hermoine.webp',
 }, {
   id: 'ron-weasley',
   name: 'Ron Weasley',
   house: 'Gryffindor',
   role: 'King Weasley',
   description: "Harry's loyal best friend and a strategic wizard chess master.",
-  imageUrl: ron
+  imageUrl: '/images/characters/ron.jpg',
 }, {
   id: 'draco-malfoy',
   name: 'Draco Malfoy',
   house: 'Slytherin',
   role: 'Slytherin Prince',
   description: "A pure-blood wizard and Harry's rival at Hogwarts.",
-  imageUrl: draco
+  imageUrl: '/images/characters/draco.jpg',
 }, {
   id: 'luna-lovegood',
   name: 'Luna Lovegood',
   house: 'Ravenclaw',
   role: 'Magizoologist',
   description: 'A quirky Ravenclaw student with a unique perspective on the world.',
-  imageUrl: luna
+  imageUrl: '/images/characters/luna.jpg',
 }, {
   id: 'severus-snape',
   name: 'Severus Snape',
   house: 'Slytherin',
   role: 'Potions Master',
   description: 'A complex wizard whose true loyalties remained hidden until the end.',
-  imageUrl: severus
+  imageUrl: '/images/characters/severus-snape.jpg',
 },{
   id: 'albus-dumbledore',
   name: 'Professor Albus Percival Wulfric Brian Dumbledore',
   house: 'Gryffindor',
   role: 'The Greatest Wizard of His Age',
   description: 'Albus Percival Wulfric Brian Dumbledore was one of the most powerful and respected wizards in history. Known for his wisdom, kindness, and unmatched magical ability, he served as the Headmaster of Hogwarts School of Witchcraft and Wizardry and played a crucial role in the defeat of Lord Voldemort.',
-  imageUrl: albus
+  imageUrl: '/images/characters/albus.webp',
 }];
 export function CharactersPage() {
   return <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative">

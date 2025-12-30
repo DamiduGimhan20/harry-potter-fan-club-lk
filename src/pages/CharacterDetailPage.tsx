@@ -4,19 +4,14 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Shield, Wand2, BookOpen } from 'lucide-react';
 import { MagicalParticles } from '../components/MagicalParticles';
 
-import harryPotterImg from '../images/characters/harry-potter.jpg';
-import severusImg from '../images/characters/severus-snape.jpg';
-import hermoine from '../images/characters/hermoine.webp';
-import ron from '../images/characters/ron.jpg';
-import draco from '../images/characters/draco.jpg';
-import luna from '../images/characters/luna.jpg';
-import albus from '../images/characters/albus.webp';
+
+
 const CHARACTERS_DATA = {
   'harry-potter': {
     name: 'Harry Potter',
     house: 'Gryffindor',
     role: 'The Boy Who Lived',
-    imageUrl: harryPotterImg,
+    imageUrl: '/images/characters/harry-potter.jpg',
     description: 'Harry James Potter is the only known survivor of the Killing Curse and the defeater of Lord Voldemort. Born to James and Lily Potter, he became an orphan at the age of one when Voldemort murdered his parents.',
     patronus: 'Stag',
     wand: '11" Holly, Phoenix Feather',
@@ -29,7 +24,7 @@ const CHARACTERS_DATA = {
     name: 'Hermione Granger',
     house: 'Gryffindor',
     role: 'Brightest Witch of Her Age',
-    imageUrl: hermoine,
+    imageUrl: '/images/characters/hermoine.webp',
     description: 'Hermione Jean Granger is a Muggle-born witch who became one of the most accomplished witches of her generation. She later became the Minister for Magic.',
     patronus: 'Otter',
     wand: '10¾" Vine, Dragon Heartstring',
@@ -42,7 +37,7 @@ const CHARACTERS_DATA = {
     name: 'Ron Weasley',
     house: 'Gryffindor',
     role: 'King Weasley',
-    imageUrl: ron,
+    imageUrl: '/images/characters/ron.jpg',
     description: "Ronald Bilius Weasley is a pure-blood wizard and Harry Potter's best friend. Known for his loyalty, humor, and strategic mind, particularly in wizard chess.",
     patronus: 'Jack Russell Terrier',
     wand: '14" Willow, Unicorn Hair',
@@ -55,7 +50,7 @@ const CHARACTERS_DATA = {
     name: 'Draco Malfoy',
     house: 'Slytherin',
     role: 'Slytherin Prince',
-    imageUrl: draco,
+    imageUrl: '/images/characters/draco.jpg',
     description: "Draco Lucius Malfoy is a pure-blood wizard and Harry Potter's rival at Hogwarts. Despite his antagonistic behavior, he showed moments of conscience and ultimately chose his family over Voldemort.",
     patronus: 'Unknown',
     wand: '10" Hawthorn, Unicorn Hair',
@@ -68,7 +63,7 @@ const CHARACTERS_DATA = {
     name: 'Luna Lovegood',
     house: 'Ravenclaw',
     role: 'Magizoologist',
-    imageUrl: luna,
+    imageUrl: '/images/characters/luna.jpg',
     description: 'Luna Lovegood is a quirky Ravenclaw student known for her unique perspective on the world and unwavering belief in magical creatures others dismiss as myths.',
     patronus: 'Hare',
     wand: 'Unknown',
@@ -81,7 +76,7 @@ const CHARACTERS_DATA = {
     name: 'Severus Snape',
     house: 'Slytherin',
     role: 'Half-Blood Prince',
-    imageUrl: severusImg,
+    imageUrl: '/images/characters/severus-snape.jpg',
     description: 'Severus Snape was a complex wizard whose true loyalties remained hidden until the end. A master of Potions and Occlumency, he served as a double agent during both Wizarding Wars.',
     patronus: 'Doe (same as Lily Potter)',
     wand: 'Unknown',
@@ -93,7 +88,7 @@ const CHARACTERS_DATA = {
     name: 'Albus Dumbledore',
     house: 'Gryffindor',
     role: 'Headmaster',
-    imageUrl: albus,
+    imageUrl: '/images/characters/albus.webp',
     description: 'Albus Percival Wulfric Brian Dumbledore was one of the most powerful and respected wizards in history. Known for his wisdom, kindness, and unmatched magical ability, he served as the Headmaster of Hogwarts School of Witchcraft and Wizardry and played a crucial role in the defeat of Lord Voldemort.',
     patronus: 'Phoenix',
     wand: '15" Elder, Thestral Tail Hair',
