@@ -22,16 +22,7 @@ const DEFAULT_POSTS: BlogPost[] = [{
   content: 'Join us at the Independence Square for a magical evening of trivia, cosplay, and butterbeer! Prizes for the best costume include official merchandise and house points.',
   views: 856,
   imageUrl: 'https://images.unsplash.com/photo-1514525253440-b393452e8d26?auto=format&fit=crop&q=80&w=800'
-}, {
-  id: '3',
-  title: 'The History of Quidditch in Sri Lanka',
-  author: 'Quidditch Weekly',
-  date: '2024-01-20',
-  category: 'News',
-  content: 'While not as famous as the European leagues, Sri Lanka boasts a rich history of broomstick sports. Discover the local teams and the unique "Taprobane Twist" maneuver invented here.',
-  views: 2301,
-  imageUrl: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=800'
-}];
+},];
 export function BlogPage() {
   // Initialize with empty array, then merge with defaults only if empty
   const [posts] = useLocalStorage<BlogPost[]>('hp_blog_posts', []);

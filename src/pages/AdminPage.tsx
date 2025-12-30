@@ -18,7 +18,7 @@ export function AdminPage() {
     if (password === 'lumos') {
       setIsAuthenticated(true);
     } else {
-      alert('Incorrect password! Try "lumos"');
+      alert('Incorrect password!');
     }
   };
   const handleTheorySubmit = (theoryData: Omit<Theory, 'id' | 'likes'>) => {
