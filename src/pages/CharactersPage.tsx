@@ -1,115 +1,213 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useFirestore } from '../hooks/useFirestore';
 import { Character } from '../types';
 import { MagicalParticles } from '../components/MagicalParticles';
 
+// Your original hardcoded characters (they will ALWAYS appear)
+const HARDCODED_CHARACTERS: Character[] = [
+  {
+    id: 'harry-potter',
+    name: 'Harry Potter',
+    house: 'Gryffindor',
+    role: 'The Boy Who Lived',
+    imageUrl: '/images/characters/harry-potter.jpg',
+    description: 'Harry James Potter is the only known survivor of the Killing Curse and the defeater of Lord Voldemort. Born to James and Lily Potter, he became an orphan at the age of one when Voldemort murdered his parents.',
+    patronus: 'Stag',
+    wand: '11" Holly, Phoenix Feather',
+    bloodStatus: 'Half-blood',
+    backstory: 'Harry grew up with his aunt and uncle, the Dursleys, who treated him poorly and kept his magical heritage a secret. On his eleventh birthday, he discovered he was a wizard and began attending Hogwarts School of Witchcraft and Wizardry. Throughout his years at Hogwarts, Harry faced numerous challenges, including confronting Voldemort multiple times.',
+    achievements: [
+      'Youngest Seeker in a century',
+      'Defeated Lord Voldemort',
+      'Master of the Deathly Hallows',
+      "Founded Dumbledore's Army",
+      'Triwizard Tournament Champion'
+    ],
+    quotes: [
+      '"I solemnly swear that I am up to no good."',
+      '"It takes a great deal of bravery to stand up to our enemies, but just as much to stand up to our friends."',
+      '"Working hard is important. But there is something that matters even more: believing in yourself."'
+    ]
+  },
+  {
+    id: 'hermione-granger',
+    name: 'Hermione Granger',
+    house: 'Gryffindor',
+    role: 'Brightest Witch of Her Age',
+    imageUrl:'/images/characters/hermoine.webp',
+    description: 'Hermione Jean Granger is a Muggle-born witch and one of the most brilliant students of her generation.',
+    patronus: 'Otter',
+    wand: '10¾" Vine, Dragon Heartstring',
+    bloodStatus: 'Muggle-born',
+    backstory: 'Raised by Muggle parents who are dentists, Hermione discovered her magical abilities and excelled at Hogwarts from day one.',
+    achievements: [
+      'Top of her year',
+      'Key member of Dumbledore\'s Army',
+      'Helped defeat Voldemort',
+      'Became Minister for Magic'
+    ],
+    quotes: [
+      '"Books! And cleverness! There are more important things — friendship and bravery."',
+      '"Fear of a name only increases fear of the thing itself."'
+    ]
+  },
+  {
+    id: 'ron-weasley',
+    name: 'Ron Weasley',
+    house: 'Gryffindor',
+    role: 'Loyal Best Friend',
+    imageUrl: '/images/characters/ron.jpg',
+    description: 'Ronald Bilius Weasley is Harry Potter\'s best friend and the sixth son of the Weasley family.',
+    patronus: 'Jack Russell Terrier',
+    wand: '14" Willow, Unicorn Hair (second wand)',
+    bloodStatus: 'Pure-blood',
+    backstory: 'Growing up in a large, loving wizarding family, Ron often felt overshadowed by his siblings.',
+    achievements: [
+      'Prefect',
+      'Gryffindor Quidditch Keeper',
+      'Helped destroy Horcruxes'
+    ],
+    quotes: [
+      '"Why spiders? Why couldn\'t it be \'follow the butterflies\'?"',
+      '"You\'re gonna suffer, but you\'re gonna be happy about it."'
+    ]
+  },
+  {
+    id: 'draco-malfoy',
+    name: 'Draco Malfoy',
+    house: 'Slytherin',
+    role: 'Slytherin Prince',
+    imageUrl: '/images/characters/draco.jpg',
+    description: 'Draco Lucius Malfoy is a pure-blood wizard and Harry\'s rival throughout his Hogwarts years.',
+    patronus: 'Unknown',
+    wand: '10" Hawthorn, Unicorn Hair',
+    bloodStatus: 'Pure-blood',
+    backstory: 'Raised in a wealthy, prejudiced wizarding family, Draco was taught to value blood purity.',
+    achievements: [
+      'Slytherin Seeker',
+      'Prefect',
+      'Later redeemed himself'
+    ],
+    quotes: [
+      '"My father will hear about this!"',
+      '"You\'ll soon find out that some wizarding families are better than others, Potter."'
+    ]
+  },
+  {
+    id: 'luna-lovegood',
+    name: 'Luna Lovegood',
+    house: 'Ravenclaw',
+    role: 'Dreamer & Truth-Teller',
+    imageUrl: '/images/characters/luna.jpg',
+    description: 'Luna Lovegood is an eccentric Ravenclaw known for her unique perspective and unwavering belief in the unusual.',
+    patronus: 'Hare',
+    wand: 'Unknown',
+    bloodStatus: 'Pure-blood',
+    backstory: 'Luna lost her mother at a young age and is often bullied for her quirky beliefs.',
+    achievements: [
+      'Member of Dumbledore\'s Army',
+      'Naturalist & Magizoologist'
+    ],
+    quotes: [
+      '"You\'re not going mad. I see them too. You\'re just as sane as I am."',
+      '"Wit beyond measure is man\'s greatest treasure."'
+    ]
+  },
+  {
+    id: 'severus-snape',
+    name: 'Severus Snape',
+    house: 'Slytherin',
+    role: 'Potions Master & Double Agent',
+    imageUrl: '/images/characters/severus-snape.jpg',
+    description: 'Severus Snape was a complex wizard who served as a double agent during both wizarding wars.',
+    patronus: 'Doe',
+    wand: 'Unknown',
+    bloodStatus: 'Half-blood',
+    backstory: 'Bullied as a child, Snape fell in love with Lily Potter and spent his life protecting her son.',
+    achievements: [
+      'Potions Master',
+      'Occlumency expert',
+      'Bravest man Harry ever knew'
+    ],
+    quotes: [
+      '"Always."',
+      '"Turn to page 394."'
+    ]
+  },
+  {
+    id: 'albus-dumbledore',
+    name: 'Albus Dumbledore',
+    house: 'Gryffindor',
+    role: 'Headmaster of Hogwarts',
+    imageUrl: '/images/characters/albus.webp',
+    description: 'Albus Percival Wulfric Brian Dumbledore is widely regarded as the greatest wizard of modern times.',
+    patronus: 'Phoenix',
+    wand: 'Elder Wand',
+    bloodStatus: 'Half-blood',
+    backstory: 'A brilliant and powerful wizard with a complex past, Dumbledore guided Harry throughout his journey.',
+    achievements: [
+      'Defeated Grindelwald',
+      'Order of Merlin, First Class',
+      'Headmaster of Hogwarts'
+    ],
+    quotes: [
+      '"It does not do to dwell on dreams and forget to live."',
+      '"Happiness can be found even in the darkest of times, if one only remembers to turn on the light."'
+    ]
+  },
+  // You can add more characters here anytime – they will always stay!
+];
 
-
-//Character Images
-
-
-const CHARACTERS: Character[] = [{
-  id: 'harry-potter',
-  name: 'Harry Potter',
-  house: 'Gryffindor',
-  role: 'The Boy Who Lived',
-  description: 'The only known survivor of the Killing Curse and the defeater of Lord Voldemort.',
-  imageUrl: '/images/characters/harry-potter.jpg',
-}, {
-  id: 'hermione-granger',
-  name: 'Hermione Granger',
-  house: 'Gryffindor',
-  role: 'Brightest Witch of Her Age',
-  description: 'A Muggle-born witch who became the Minister for Magic.',
-  imageUrl:'/images/characters/hermoine.webp',
-}, {
-  id: 'ron-weasley',
-  name: 'Ron Weasley',
-  house: 'Gryffindor',
-  role: 'King Weasley',
-  description: "Harry's loyal best friend and a strategic wizard chess master.",
-  imageUrl: '/images/characters/ron.jpg',
-}, {
-  id: 'draco-malfoy',
-  name: 'Draco Malfoy',
-  house: 'Slytherin',
-  role: 'Slytherin Prince',
-  description: "A pure-blood wizard and Harry's rival at Hogwarts.",
-  imageUrl: '/images/characters/draco.jpg',
-}, {
-  id: 'luna-lovegood',
-  name: 'Luna Lovegood',
-  house: 'Ravenclaw',
-  role: 'Magizoologist',
-  description: 'A quirky Ravenclaw student with a unique perspective on the world.',
-  imageUrl: '/images/characters/luna.jpg',
-}, {
-  id: 'severus-snape',
-  name: 'Severus Snape',
-  house: 'Slytherin',
-  role: 'Potions Master',
-  description: 'A complex wizard whose true loyalties remained hidden until the end.',
-  imageUrl: '/images/characters/severus-snape.jpg',
-},{
-  id: 'albus-dumbledore',
-  name: 'Professor Albus Percival Wulfric Brian Dumbledore',
-  house: 'Gryffindor',
-  role: 'The Greatest Wizard of His Age',
-  description: 'Albus Percival Wulfric Brian Dumbledore was one of the most powerful and respected wizards in history. Known for his wisdom, kindness, and unmatched magical ability, he served as the Headmaster of Hogwarts School of Witchcraft and Wizardry and played a crucial role in the defeat of Lord Voldemort.',
-  imageUrl: '/images/characters/albus.webp',
-}];
 export function CharactersPage() {
-  return <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative">
+  const { items: firebaseCharacters } = useFirestore<Character>('characters');
+
+  // Combine hardcoded + Firebase characters
+  const allCharacters = [...HARDCODED_CHARACTERS, ...firebaseCharacters];
+
+  return (
+    <div className="min-h-screen pt-20 pb-12 px-4 relative">
       <MagicalParticles />
-
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <motion.h1 initial={{
-          opacity: 0,
-          y: -20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} className="text-4xl md:text-6xl font-bold text-white mb-4 font-cinzel text-glow">
-            Legendary <span className="text-gold">Characters</span>
-          </motion.h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            Meet the witches and wizards who shaped our history.
-          </p>
-        </div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 font-cinzel">Witches & Wizards</h1>
+          <p className="text-slate-400 text-lg">Meet the legends who shaped the history of magic.</p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {CHARACTERS.map((char, index) => <Link key={char.id} to={`/characters/${char.id}`}>
-              <motion.div initial={{
-            opacity: 0,
-            scale: 0.9
-          }} animate={{
-            opacity: 1,
-            scale: 1
-          }} transition={{
-            delay: index * 0.1
-          }} className="group relative h-96 rounded-xl overflow-hidden cursor-pointer">
-                <img src={char.imageUrl} alt={char.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full mb-2 ${char.house === 'Gryffindor' ? 'bg-red-900 text-red-100' : char.house === 'Slytherin' ? 'bg-green-900 text-green-100' : char.house === 'Ravenclaw' ? 'bg-blue-900 text-blue-100' : 'bg-yellow-900 text-yellow-100'}`}>
-                    {char.house}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white font-cinzel mb-1">
-                    {char.name}
-                  </h3>
-                  <p className="text-gold text-sm font-medium mb-2">
-                    {char.role}
-                  </p>
-                  <p className="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                    {char.description}
-                  </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {allCharacters.map((char, index) => (
+            <Link key={char.id} to={`/characters/${char.id}`}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ y: -10 }}
+                className="group relative aspect-square rounded-2xl overflow-hidden bg-slate-800/50 border border-slate-700 hover:border-gold/50 transition-all"
+              >
+                {char.imageUrl ? (
+                  <img src={char.imageUrl} alt={char.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                    <div className="text-4xl font-bold text-gold">{char.name.charAt(0)}</div>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-center">
+                  <h3 className="text-xl font-bold text-white font-cinzel mb-1">{char.name}</h3>
+                  <p className="text-gold text-sm">{char.role}</p>
+                  <p className="text-slate-300 text-xs mt-2">{char.house}</p>
                 </div>
               </motion.div>
-            </Link>)}
+            </Link>
+          ))}
         </div>
+
+        {allCharacters.length === 0 && (
+          <p className="text-center text-slate-500 mt-20 text-xl">No characters yet.</p>
+        )}
       </div>
-    </div>;
+    </div>
+  );
 }

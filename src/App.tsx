@@ -14,6 +14,7 @@ import { BlogPage } from './pages/BlogPage';
 import { BlogDetailPage } from './pages/BlogDetailPage';
 import { QuizPage } from './pages/QuizPage';
 import { AdminPage } from './pages/AdminPage';
+import { SpellsPage } from './pages/SpellsPage';
 function ScrollToTop() {
   const {
     pathname
@@ -42,6 +43,7 @@ export function App() {
               <Route path="/blog/:id" element={<BlogDetailPage />} />
               <Route path="/quiz" element={<QuizPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/spells" element={<SpellsPage />} />
             </Routes>
           </AnimatePresence>
         </main>

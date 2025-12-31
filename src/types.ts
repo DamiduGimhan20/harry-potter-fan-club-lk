@@ -1,4 +1,4 @@
-// src/types.ts
+
 
 export interface Theory {
   id: string;
@@ -19,5 +19,29 @@ export interface BlogPost {
   imageUrl?: string;
   date: string;
   views?: number;
-  likes?: number;  // ← This line MUST be here
+  likes?: number;
+}
+
+export interface Character {
+  id: string;
+  name: string;
+  house: string;
+  role: string;
+  imageUrl?: string;
+  description: string;
+  patronus?: string;
+  wand?: string;
+  bloodStatus?: string;
+  backstory?: string;
+  achievements?: string[];
+  quotes?: string[];
+}
+export interface Spell {
+  id: string;
+  name: string;
+  incantation: string | null;
+  type: string;
+  effect: string;
+  notes: string | null;
+  likes?: number;
 }

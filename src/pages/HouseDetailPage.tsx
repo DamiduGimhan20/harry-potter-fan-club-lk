@@ -1,206 +1,162 @@
+// src/pages/HouseDetailPage.tsx
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Shield, Users, Home, Sparkles } from 'lucide-react';
+import { ArrowLeft, Shield, Users, Home } from 'lucide-react';
 import { MagicalParticles } from '../components/MagicalParticles';
+
 const HOUSES_DATA = {
   gryffindor: {
     name: 'Gryffindor',
-    colors: ['#740001', '#D3A625'],
-    gradient: 'from-red-900 to-red-600',
-    mascot: 'Lion',
+    colors: 'from-red-800 to-yellow-600',
+    crest: '../images/houses/g.jpg',
+    commonRoom: 'https://contentful.harrypotter.com/usf1vwtuqyxm/3jNnOr6Nfyg6SqmS44CcGi/05b5a62eb3a5d4ea8e50de2918f89b4a/GryffindorCommonRoom_WB_F5_CelebrationInCommonRoom_Promo_080615_Land.jpg',
     founder: 'Godric Gryffindor',
+    mascot: 'Lion',
     element: 'Fire',
-    traits: ['Bravery', 'Daring', 'Nerve', 'Chivalry', 'Courage', 'Determination'],
+    traits: ['Bravery', 'Daring', 'Nerve', 'Chivalry', 'Courage'],
     description: 'Gryffindor values courage, bravery, nerve, and chivalry. Its emblematic animal is the lion, and its colours are scarlet and gold.',
-    history: 'Founded by Godric Gryffindor, one of the four founders of Hogwarts School of Witchcraft and Wizardry. Gryffindor was known for his bravery and skill in battle. He valued courage above all other qualities and believed that any wizard or witch with a brave heart was worthy of learning magic.',
-    commonRoom: "The Gryffindor common room is located in one of the castle's towers, accessible through the portrait of the Fat Lady. The room is cozy and comfortable, decorated in the house colors of scarlet and gold, with squashy armchairs, tables, and a fireplace.",
-    notableMembers: ['Harry Potter - The Boy Who Lived', 'Hermione Granger - Brightest Witch of Her Age', 'Ron Weasley - Loyal Friend and Strategist', 'Albus Dumbledore - Greatest Wizard of Modern Times', 'Minerva McGonagall - Transfiguration Master', 'Sirius Black - The Last of the Blacks', 'James Potter - Marauder and Animagus', 'Lily Potter - Sacrificial Love'],
-    values: 'Gryffindors are known for their daring, nerve, and chivalry. They are brave and willing to stand up for what is right, even in the face of danger. While sometimes accused of being reckless, their courage often leads them to great achievements.'
+    commonRoomDesc: 'The Gryffindor common room is located in one of the castle\'s highest towers. It is cozy and warm, filled with squashy armchairs, tables, and a crackling fireplace. The room is decorated in scarlet and gold, with large windows offering views of the grounds.',
+    notableMembers: ['Harry Potter', 'Hermione Granger', 'Ron Weasley', 'Albus Dumbledore', 'Minerva McGonagall', 'Sirius Black', 'Remus Lupin']
   },
   slytherin: {
     name: 'Slytherin',
-    colors: ['#1A472A', '#5D5D5D'],
-    gradient: 'from-green-900 to-green-600',
-    mascot: 'Serpent',
+    colors: 'from-green-800 to-emerald-600',
+    crest: '../images/houses/s.jpg',
+    commonRoom: 'https://contentful.harrypotter.com/usf1vwtuqyxm/7xvjjnk3ohlMXpKfQ5XxUs/48b84a7470b321832a4602324d807f8c/the-slytherin-common-room_3_1800x1248.png',
     founder: 'Salazar Slytherin',
+    mascot: 'Serpent',
     element: 'Water',
-    traits: ['Ambition', 'Cunning', 'Leadership', 'Resourcefulness', 'Determination', 'Self-Preservation'],
-    description: 'Slytherin values ambition, cunning, leadership, and resourcefulness. Its emblematic animal is the serpent, and its colours are emerald green and silver.',
-    history: 'Founded by Salazar Slytherin, who valued ambition, cunning, and pure-blood heritage. Slytherin was one of the four founders of Hogwarts but left the school after a disagreement with the other founders about admitting Muggle-born students. Despite its controversial reputation, Slytherin has produced many great witches and wizards.',
-    commonRoom: 'The Slytherin common room is a long, low underground room with rough stone walls and ceiling, located in the dungeons beneath the Black Lake. It is lit by greenish lamps and has carved armchairs. The room has a distinctly medieval feel with its stone walls and mysterious ambiance.',
-    notableMembers: ['Severus Snape - The Half-Blood Prince', 'Draco Malfoy - Redeemed Antagonist', 'Tom Riddle - Lord Voldemort (Dark Lord)', 'Horace Slughorn - Potions Master', 'Bellatrix Lestrange - Devoted Death Eater', 'Merlin - Greatest Wizard of All Time', 'Lucius Malfoy - Influential Pure-blood'],
-    values: 'Slytherins are ambitious and determined, willing to do what it takes to achieve their goals. They are resourceful and cunning, often thinking strategically. While the house has produced Dark wizards, it has also produced many accomplished witches and wizards who used their ambition for good.'
+    traits: ['Ambition', 'Cunning', 'Leadership', 'Resourcefulness'],
+    description: 'Slytherin values ambition, cunning, leadership, and resourcefulness. Its emblematic animal is the serpent, and its colours are green and silver.',
+    commonRoomDesc: 'Located in the dungeons beneath the Black Lake, the Slytherin common room has an underwater feel with greenish lamps and large windows showing the lake\'s creatures. The room is long and low, with stone walls and silver lanterns.',
+    notableMembers: ['Draco Malfoy', 'Severus Snape', 'Tom Riddle (Voldemort)', 'Bellatrix Lestrange', 'Regulus Black', 'Horace Slughorn']
   },
   ravenclaw: {
     name: 'Ravenclaw',
-    colors: ['#0E1A40', '#946B2D'],
-    gradient: 'from-blue-900 to-blue-600',
-    mascot: 'Eagle',
+    colors: 'from-blue-800 to-blue-500',
+    crest: '../images/houses/r.jpg',
+    commonRoom: 'https://i.pinimg.com/736x/3b/eb/97/3beb970b919514d6f19dfc0e519da695.jpg',
     founder: 'Rowena Ravenclaw',
+    mascot: 'Eagle',
     element: 'Air',
-    traits: ['Intelligence', 'Knowledge', 'Curiosity', 'Creativity', 'Wit', 'Wisdom'],
-    description: 'Ravenclaw values intelligence, knowledge, curiosity, creativity, and wit. Its emblematic animal is the eagle, and its colours are blue and bronze.',
-    history: "Founded by Rowena Ravenclaw, who valued intelligence and wisdom above all else. Ravenclaw believed that learning and knowledge were the greatest treasures. She was known for her brilliant mind and created the ever-changing floor plan of Hogwarts. Her diadem, which enhanced the wisdom of the wearer, became one of Voldemort's Horcruxes.",
-    commonRoom: 'The Ravenclaw common room is located in a tower on the west side of the castle. To enter, students must answer a riddle posed by an eagle-shaped bronze knocker. The room is wide and circular, with arched windows offering spectacular views. It features blue and bronze silks, a domed ceiling painted with stars, and a white marble statue of Rowena Ravenclaw.',
-    notableMembers: ['Luna Lovegood - Unique Magizoologist', 'Cho Chang - Seeker and D.A. Member', 'Filius Flitwick - Charms Master', 'Gilderoy Lockhart - Memory Charm Specialist', 'Garrick Ollivander - Wandmaker', 'Sybill Trelawney - Divination Professor', 'Padma Patil - Intelligent Witch'],
-    values: 'Ravenclaws are known for their wisdom, wit, and love of learning. They value intelligence and creativity, often thinking outside the box. While sometimes seen as aloof, their pursuit of knowledge and understanding makes them invaluable in solving complex problems.'
+    traits: ['Intelligence', 'Wit', 'Wisdom', 'Creativity'],
+    description: 'Ravenclaw values intelligence, knowledge, creativity, and wit. Its emblematic animal is the eagle, and its colours are blue and bronze.',
+    commonRoomDesc: 'Located in a high tower, the Ravenclaw common room is airy and spacious with arched windows offering panoramic views. It has blue and bronze silk hangings, a domed ceiling painted with stars, and shelves full of books.',
+    notableMembers: ['Luna Lovegood', 'Cho Chang', 'Gilderoy Lockhart', 'Filius Flitwick', 'Penelope Clearwater', 'Quirinus Quirrell']
   },
   hufflepuff: {
     name: 'Hufflepuff',
-    colors: ['#FFD800', '#000000'],
-    gradient: 'from-yellow-600 to-yellow-400',
-    mascot: 'Badger',
+    colors: 'from-yellow-600 to-amber-400',
+    crest: '../images/houses/h.jpg',
+    commonRoom: 'https://contentful.harrypotter.com/usf1vwtuqyxm/7HAQ0pLKDB531zGERfo1Wg/7b686289fc0a4e4c996948cc95b852fb/Screenshot_2022-11-10_at_17.24.52.png?q=75&fm=jpg&w=2560',
     founder: 'Helga Hufflepuff',
+    mascot: 'Badger',
     element: 'Earth',
-    traits: ['Loyalty', 'Patience', 'Hard Work', 'Fair Play', 'Dedication', 'Tolerance'],
-    description: 'Hufflepuff values hard work, dedication, patience, loyalty, and fair play. Its emblematic animal is the badger, and its colours are yellow and black.',
-    history: "Founded by Helga Hufflepuff, who believed that everyone deserved a chance to learn magic, regardless of their background. Hufflepuff was the most inclusive of the four founders, accepting students who didn't fit the specific criteria of the other houses. She valued hard work and loyalty above all else and was known for her exceptional skills in food-related charms.",
-    commonRoom: "The Hufflepuff common room is located in the basement, near the castle's kitchens. It is accessed through a pile of barrels. The room is cozy and welcoming, with low ceilings, round windows, and yellow hangings. It has a warm, earthy feel with plants and comfortable furniture, making it feel like a home away from home.",
-    notableMembers: ['Newt Scamander - Magizoologist Extraordinaire', 'Cedric Diggory - Triwizard Champion', 'Nymphadora Tonks - Metamorphmagus Auror', 'Pomona Sprout - Herbology Professor', 'Theseus Scamander - War Hero', 'Fat Friar - House Ghost'],
-    values: 'Hufflepuffs are known for their loyalty, patience, and strong work ethic. They value fair play and are often the most accepting and inclusive of the houses. While sometimes underestimated, their dedication and loyalty make them formidable allies and friends.'
+    traits: ['Loyalty', 'Patience', 'Fair Play', 'Hard Work'],
+    description: 'Hufflepuff values hard work, patience, loyalty, and fair play. Its emblematic animal is the badger, and its colours are yellow and black.',
+    commonRoomDesc: 'Located near the kitchens, the Hufflepuff common room is earthy and cozy, with low ceilings, circular doors, and lots of plants. It has yellow hangings, overstuffed sofas, and a warm, welcoming atmosphere.',
+    notableMembers: ['Cedric Diggory', 'Newt Scamander', 'Nymphadora Tonks', 'Pomona Sprout', 'Justin Finch-Fletchley']
   }
 };
-export function HouseDetailPage() {
-  const {
-    id
-  } = useParams();
-  const navigate = useNavigate();
-  const house = HOUSES_DATA[id as keyof typeof HOUSES_DATA];
-  if (!house) {
-    return <div className="min-h-screen pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl text-white mb-4">House not found</h1>
-          <button onClick={() => navigate('/houses')} className="text-gold hover:text-white">
-            Go back to houses
-          </button>
-        </div>
-      </div>;
-  }
-  return <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative">
-      <MagicalParticles />
 
-      <div className="max-w-5xl mx-auto relative z-10">
-        <button onClick={() => navigate('/houses')} className="flex items-center space-x-2 text-slate-400 hover:text-white mb-8 transition-colors group">
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Houses</span>
+export function HouseDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const house = id ? HOUSES_DATA[id as keyof typeof HOUSES_DATA] : null;
+
+  if (!house) {
+    return <div className="text-center py-20 text-white text-2xl">House not found</div>;
+  }
+
+  return (
+    <div className="min-h-screen pt-20 pb-12 px-4 relative bg-slate-900">
+      <MagicalParticles />
+      <div className="max-w-6xl mx-auto relative z-10">
+        <button onClick={() => navigate('/houses')} className="flex items-center text-gold hover:text-white mb-8">
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Back to Houses
         </button>
 
-        <motion.div initial={{
-        opacity: 0,
-        y: 20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} className="mb-12">
-          <div className={`relative rounded-3xl overflow-hidden bg-gradient-to-br ${house.gradient} p-12 mb-8`}>
-            <div className="relative z-10 text-center">
-              <Shield className="h-20 w-20 text-white mx-auto mb-6 opacity-90" />
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 font-cinzel">
-                {house.name}
-              </h1>
-              <p className="text-xl text-white/90 italic mb-6">
-                "{house.description}"
-              </p>
-              <div className="flex justify-center gap-8 text-white/80">
-                <div className="text-center">
-                  <p className="text-sm uppercase tracking-wider mb-1">
-                    Founder
-                  </p>
-                  <p className="font-bold">{house.founder}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm uppercase tracking-wider mb-1">
-                    Mascot
-                  </p>
-                  <p className="font-bold">{house.mascot}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm uppercase tracking-wider mb-1">
-                    Element
-                  </p>
-                  <p className="font-bold">{house.element}</p>
-                </div>
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-black/10" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <Sparkles className="h-5 w-5 text-gold" />
-                <h2 className="text-xl font-bold text-white font-cinzel">
-                  House Traits
-                </h2>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {house.traits.map((trait, idx) => <span key={idx} className="px-4 py-2 bg-slate-700/50 rounded-full text-sm text-slate-200 border border-slate-600">
-                    {trait}
-                  </span>)}
-              </div>
-            </div>
-
-            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <Home className="h-5 w-5 text-gold" />
-                <h2 className="text-xl font-bold text-white font-cinzel">
-                  House Colors
-                </h2>
-              </div>
-              <div className="flex gap-4">
-                {house.colors.map((color, idx) => <div key={idx} className="flex-1">
-                    <div className="h-20 rounded-lg border-2 border-slate-600 mb-2" style={{
-                  backgroundColor: color
-                }} />
-                    <p className="text-xs text-slate-400 text-center font-mono">
-                      {color}
-                    </p>
-                  </div>)}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-8">
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <h2 className="text-2xl font-bold text-white mb-4 font-cinzel">
-                History
-              </h2>
-              <p className="text-slate-300 leading-relaxed">{house.history}</p>
-            </div>
-
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <h2 className="text-2xl font-bold text-white mb-4 font-cinzel">
-                Common Room
-              </h2>
-              <p className="text-slate-300 leading-relaxed">
-                {house.commonRoom}
-              </p>
-            </div>
-
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <h2 className="text-2xl font-bold text-white mb-4 font-cinzel">
-                Values & Philosophy
-              </h2>
-              <p className="text-slate-300 leading-relaxed">{house.values}</p>
-            </div>
-
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <Users className="h-5 w-5 text-gold" />
-                <h2 className="text-2xl font-bold text-white font-cinzel">
-                  Notable Members
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {house.notableMembers.map((member, idx) => <div key={idx} className="flex items-start space-x-2 text-slate-300">
-                    <span className="text-gold mt-1">•</span>
-                    <span>{member}</span>
-                  </div>)}
-              </div>
-            </div>
+        {/* Hero with Common Room Image */}
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="relative rounded-3xl overflow-hidden shadow-2xl mb-12"
+        >
+          <img 
+            src={house.commonRoom} 
+            alt={`${house.name} Common Room`} 
+            className="w-full h-96 md:h-[32rem] object-cover"
+          />
+          <div className={`absolute inset-0 bg-gradient-to-br ${house.colors} opacity-60`} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70" />
+          
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center">
+            <img src={house.crest} alt={`${house.name} Crest`} className="w-32 h-32 mx-auto mb-6 drop-shadow-2xl" />
+            <h1 className="text-6xl md:text-8xl font-bold text-white font-cinzel drop-shadow-2xl">
+              {house.name}
+            </h1>
+            <p className="text-2xl text-gold mt-4 italic">"{house.description}"</p>
           </div>
         </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Traits & Info */}
+          <div className="space-y-8">
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
+              <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+                <Shield className="h-8 w-8 text-gold mr-3" />
+                Core Traits
+              </h2>
+              <ul className="space-y-3">
+                {house.traits.map(trait => (
+                  <li key={trait} className="text-xl text-slate-300 flex items-center">
+                    <span className="text-gold mr-3">✦</span>
+                    {trait}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
+              <h2 className="text-2xl font-bold text-white mb-4 font-cinzel">House Details</h2>
+              <div className="space-y-4 text-slate-300">
+                <p><span className="text-gold font-medium">Founder:</span> {house.founder}</p>
+                <p><span className="text-gold font-medium">Mascot:</span> {house.mascot}</p>
+                <p><span className="text-gold font-medium">Element:</span> {house.element}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Center Column - Common Room Description */}
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
+            <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Home className="h-8 w-8 text-gold mr-3" />
+              Common Room
+            </h2>
+            <p className="text-slate-300 text-lg leading-relaxed">
+              {house.commonRoomDesc}
+            </p>
+          </div>
+
+          {/* Right Column - Notable Members */}
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
+            <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Users className="h-8 w-8 text-gold mr-3" />
+              Notable Members
+            </h2>
+            <ul className="space-y-3">
+              {house.notableMembers.map(member => (
+                <li key={member} className="text-slate-300 flex items-center">
+                  <span className="text-gold mr-3">•</span>
+                  {member}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>;
+    </div>
+  );
 }

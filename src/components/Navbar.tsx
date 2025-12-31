@@ -33,6 +33,9 @@ export function Navbar() {
     name: 'Blog',
     path: '/blog'
   }, {
+    name: 'Spells',
+    path: '/spells'
+  }, {
     name: 'Quiz',
     path: '/quiz'
   }];

@@ -1,13 +1,16 @@
-import React from 'react';
+// src/pages/CharacterDetailPage.tsx
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Shield, Wand2, BookOpen } from 'lucide-react';
+import { ArrowLeft, Shield, Wand2, BookOpen, Trophy, Quote } from 'lucide-react';
+import { useFirestore } from '../hooks/useFirestore';
+import { Character } from '../types';
 import { MagicalParticles } from '../components/MagicalParticles';
 
-
-
-const CHARACTERS_DATA = {
-  'harry-potter': {
+// Hardcoded characters
+const HARDCODED_CHARACTERS: Record<string, Character> = {
+ 'harry-potter': {
+    id: 'harry-potter',
     name: 'Harry Potter',
     house: 'Gryffindor',
     role: 'The Boy Who Lived',
@@ -21,10 +24,11 @@ const CHARACTERS_DATA = {
     quotes: ['"I solemnly swear that I am up to no good."', '"It takes a great deal of bravery to stand up to our enemies, but just as much to stand up to our friends."', '"Working hard is important. But there is something that matters even more: believing in yourself."']
   },
   'hermione-granger': {
+    id: 'hermione-granger',
     name: 'Hermione Granger',
     house: 'Gryffindor',
     role: 'Brightest Witch of Her Age',
-    imageUrl: '/images/characters/hermoine.webp',
+    imageUrl:'/images/characters/hermoine.webp',
     description: 'Hermione Jean Granger is a Muggle-born witch who became one of the most accomplished witches of her generation. She later became the Minister for Magic.',
     patronus: 'Otter',
     wand: '10¾" Vine, Dragon Heartstring',
@@ -34,6 +38,7 @@ const CHARACTERS_DATA = {
     quotes: ['"Books! And cleverness! There are more important things — friendship and bravery."', '"Fear of a name increases fear of the thing itself."', '"Just because you have the emotional range of a teaspoon doesn\'t mean we all have."']
   },
   'ron-weasley': {
+    id: 'ron-weasley',
     name: 'Ron Weasley',
     house: 'Gryffindor',
     role: 'King Weasley',
@@ -47,6 +52,7 @@ const CHARACTERS_DATA = {
     quotes: ['"Don\'t let the Muggles get you down."', '"Bloody hell!"', '"You\'re a little scary sometimes, you know that? Brilliant... but scary."']
   },
   'draco-malfoy': {
+    id: 'draco-malfoy',
     name: 'Draco Malfoy',
     house: 'Slytherin',
     role: 'Slytherin Prince',
@@ -60,6 +66,7 @@ const CHARACTERS_DATA = {
     quotes: ['"My father will hear about this!"', '"I didn\'t know you could read."', '"Potter, is it true you fainted?"']
   },
   'luna-lovegood': {
+    id: 'luna-lovegood',
     name: 'Luna Lovegood',
     house: 'Ravenclaw',
     role: 'Magizoologist',
@@ -73,6 +80,7 @@ const CHARACTERS_DATA = {
     quotes: ['"You\'re just as sane as I am."', '"Things we lose have a way of coming back to us in the end, if not always in the way we expect."', "\"I think they think I'm a bit odd, you know. Some people call me 'Loony' Lovegood, actually.\""]
   },
   'severus-snape': {
+    id: 'severus-snape',
     name: 'Severus Snape',
     house: 'Slytherin',
     role: 'Half-Blood Prince',
@@ -85,6 +93,7 @@ const CHARACTERS_DATA = {
     achievements: ['Youngest Potions Master at Hogwarts', 'Invented numerous spells', 'Master of Occlumency and Legilimency', 'Double agent for the Order of the Phoenix', 'Headmaster of Hogwarts', 'Protected Harry Potter for years'],
     quotes: ['"Always."', '"Turn to page 394."', '"You have your mother\'s eyes."']
   },'albus-dumbledore': {
+    id: 'albus-dumbledore',
     name: 'Albus Dumbledore',
     house: 'Gryffindor',
     role: 'Headmaster',
@@ -97,145 +106,156 @@ const CHARACTERS_DATA = {
     achievements: ["Defeated the dark wizard Gellert Grindelwald", 'Founder and leader of the Order of the Phoenix', 'Discovered the 12 uses of dragon’s blood', 'Wielder of the Elder Wand', 'Married Rolf Scamander (grandson of Newt Scamander)'],
     quotes: ['It does not do to dwell on dreams and forget to live.', 'Happiness can be found even in the darkest of times, if one only remembers to turn on the light.', 'It matters not what someone is born, but what they grow to be.']
   },
-};
-export function CharacterDetailPage() {
-  const {
-    id
-  } = useParams();
-  const navigate = useNavigate();
-  const character = CHARACTERS_DATA[id as keyof typeof CHARACTERS_DATA];
-  if (!character) {
-    return <div className="min-h-screen pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl text-white mb-4">Character not found</h1>
-          <button onClick={() => navigate('/characters')} className="text-gold hover:text-white">
-            Go back to characters
-          </button>
-        </div>
-      </div>;
-  }
-  const houseColors = {
-    Gryffindor: 'from-red-900 to-red-600',
-    Slytherin: 'from-green-900 to-green-600',
-    Ravenclaw: 'from-blue-900 to-blue-600',
-    Hufflepuff: 'from-yellow-600 to-yellow-400'
-  };
-  return <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative">
-      <MagicalParticles />
 
+};
+
+export function CharacterDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { getSingle } = useFirestore<Character>('characters');
+  const [character, setCharacter] = useState<Character | null>(null);
+
+  useEffect(() => {
+    const loadCharacter = async () => {
+      if (!id) return;
+
+      // Check hardcoded first
+      const hardcoded = HARDCODED_CHARACTERS[id];
+      if (hardcoded) {
+        setCharacter(hardcoded);
+        return;
+      }
+
+      // Then Firebase
+      const firebaseChar = await getSingle(id);
+      setCharacter(firebaseChar);
+    };
+
+    loadCharacter();
+  }, [id, getSingle]);
+
+  if (!character) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white text-2xl">
+        Loading character...
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pt-20 pb-12 px-4 relative bg-slate-900">
+      <MagicalParticles />
       <div className="max-w-5xl mx-auto relative z-10">
-        <button onClick={() => navigate('/characters')} className="flex items-center space-x-2 text-slate-400 hover:text-white mb-8 transition-colors group">
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Characters</span>
+        <button 
+          onClick={() => navigate('/characters')} 
+          className="flex items-center text-gold hover:text-white transition-colors mb-8"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Back to Characters
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <motion.div initial={{
-          opacity: 0,
-          x: -20
-        }} animate={{
-          opacity: 1,
-          x: 0
-        }} className="md:col-span-1">
-            <div className="sticky top-24">
-              <div className="relative rounded-2xl overflow-hidden mb-6 aspect-[3/4]">
-                <img src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
-                <div className={`absolute inset-0 bg-gradient-to-t ${houseColors[character.house as keyof typeof houseColors]} opacity-20`} />
-              </div>
-
-              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                <h3 className="text-sm text-slate-400 uppercase tracking-wider mb-4">
-                  Details
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500">House</span>
-                    <span className="text-white font-medium">
-                      {character.house}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Blood Status</span>
-                    <span className="text-white font-medium">
-                      {character.bloodStatus}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Patronus</span>
-                    <span className="text-white font-medium">
-                      {character.patronus}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Wand</span>
-                    <span className="text-white font-medium text-right">
-                      {character.wand}
-                    </span>
-                  </div>
-                </div>
-              </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="space-y-12"
+        >
+          {/* Top Section: Image + Name + Role + Description */}
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-shrink-0">
+              <img 
+                src={character.imageUrl || 'https://placehold.co/400x600?text=' + character.name.charAt(0)} 
+                alt={character.name} 
+                className="w-full max-w-sm h-auto rounded-xl shadow-2xl border border-gold/20"
+              />
             </div>
-          </motion.div>
-
-          <motion.div initial={{
-          opacity: 0,
-          x: 20
-        }} animate={{
-          opacity: 1,
-          x: 0
-        }} className="md:col-span-2 space-y-8">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 font-cinzel">
+            <div className="flex-1">
+              <h1 className="text-5xl font-bold text-white font-cinzel mb-2">
                 {character.name}
               </h1>
-              <p className="text-gold text-xl mb-6">{character.role}</p>
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-2xl text-gold mb-6">
+                {character.role}
+              </p>
+              <p className="text-slate-300 text-lg leading-relaxed">
                 {character.description}
               </p>
             </div>
+          </div>
 
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <BookOpen className="h-5 w-5 text-gold" />
-                <h2 className="text-xl font-bold text-white font-cinzel">
-                  Backstory
-                </h2>
+          {/* Magical Profile (Details Box) */}
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700">
+            <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Shield className="h-8 w-8 text-gold mr-3" />
+              Magical Profile
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="text-sm text-slate-400 uppercase mb-1">House</p>
+                <p className="text-xl text-white">{character.house}</p>
               </div>
-              <p className="text-slate-300 leading-relaxed">
+              <div>
+                <p className="text-sm text-slate-400 uppercase mb-1">Blood Status</p>
+                <p className="text-xl text-white">{character.bloodStatus}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-400 uppercase mb-1">Patronus</p>
+                <p className="text-xl text-white">{character.patronus}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-400 uppercase mb-1">Wand</p>
+                <p className="text-xl text-white">{character.wand}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Backstory Section */}
+          {character.backstory && (
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700">
+              <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+                <BookOpen className="h-8 w-8 text-gold mr-3" />
+                Backstory
+              </h2>
+              <p className="text-slate-300 text-lg leading-relaxed whitespace-pre-wrap">
                 {character.backstory}
               </p>
             </div>
+          )}
 
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <Shield className="h-5 w-5 text-gold" />
-                <h2 className="text-xl font-bold text-white font-cinzel">
-                  Notable Achievements
-                </h2>
-              </div>
-              <ul className="space-y-2">
-                {character.achievements.map((achievement, idx) => <li key={idx} className="flex items-start space-x-2 text-slate-300">
-                    <span className="text-gold mt-1">•</span>
-                    <span>{achievement}</span>
-                  </li>)}
+          {/* Notable Achievements */}
+          {character.achievements && character.achievements.length > 0 && (
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700">
+              <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+                <Trophy className="h-8 w-8 text-gold mr-3" />
+                Notable Achievements
+              </h2>
+              <ul className="space-y-4">
+                {character.achievements.map((ach, i) => (
+                  <li key={i} className="flex items-start text-slate-300 text-lg">
+                    <span className="text-gold mr-3">•</span>
+                    {ach}
+                  </li>
+                ))}
               </ul>
             </div>
+          )}
 
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center space-x-2 mb-4">
-                <Wand2 className="h-5 w-5 text-gold" />
-                <h2 className="text-xl font-bold text-white font-cinzel">
-                  Memorable Quotes
-                </h2>
-              </div>
-              <div className="space-y-4">
-                {character.quotes.map((quote, idx) => <blockquote key={idx} className="border-l-2 border-gold pl-4 italic text-slate-300">
+          {/* Memorable Quotes */}
+          {character.quotes && character.quotes.length > 0 && (
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700">
+              <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+                <Quote className="h-8 w-8 text-gold mr-3 rotate-180" />
+                Memorable Quotes
+              </h2>
+              <div className="space-y-8">
+                {character.quotes.map((quote, i) => (
+                  <blockquote key={i} className="text-slate-300 text-lg italic border-l-4 border-gold pl-6">
                     {quote}
-                  </blockquote>)}
+                  </blockquote>
+                ))}
               </div>
             </div>
-          </motion.div>
-        </div>
+          )}
+        </motion.div>
       </div>
-    </div>;
+    </div>
+  );
 }
