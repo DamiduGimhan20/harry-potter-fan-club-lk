@@ -8,6 +8,7 @@ export interface Theory {
   likes: number;
 }
 export interface BlogPost {
+  likes: number;
   id: string;
   title: string;
   author: string;

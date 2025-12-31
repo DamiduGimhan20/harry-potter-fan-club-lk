@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Facebook, Twitter, Instagram, Mail } from 'lucide-react';
+import { Sparkles, Facebook, Twitter, Instagram, Mail , } from 'lucide-react';
 export function Footer() {
   return <footer className="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,7 +71,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-gold transition-colors">
+                <a href="mailto:mrcring007@gmail.com" className="text-slate-400 hover:text-gold transition-colors">
                   Contact Us
                 </a>
               </li>
@@ -91,7 +91,7 @@ export function Footer() {
               <a href="#" className="text-slate-400 hover:text-gold transition-colors p-2 bg-slate-800 rounded-full hover:bg-slate-700">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-slate-400 hover:text-gold transition-colors p-2 bg-slate-800 rounded-full hover:bg-slate-700">
+              <a href="mailto:mrcring007@gmail.com" className="text-slate-400 hover:text-gold transition-colors p-2 bg-slate-800 rounded-full hover:bg-slate-700">
                 <Mail className="h-5 w-5" />
               </a>
             </div>

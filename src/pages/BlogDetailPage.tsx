@@ -1,4 +1,5 @@
-// src/pages/BlogDetailPage.tsx
+// src/pages/BlogDetailPage.tsx  (UPDATED WITH AUTO VIEW INCREMENT)
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -6,12 +7,15 @@ import { ArrowLeft, Eye, User, Calendar, Tag, Share2 } from 'lucide-react';
 import { useFirestore } from '../hooks/useFirestore';
 import { BlogPost } from '../types';
 import { MagicalParticles } from '../components/MagicalParticles';
+import { db } from '../firebase';
+import { doc, updateDoc, increment } from 'firebase/firestore';
 
 export function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getSingle, items: allPosts } = useFirestore<BlogPost>('blogs');
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [viewsIncremented, setViewsIncremented] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -22,6 +26,27 @@ export function BlogDetailPage() {
     };
     fetchPost();
   }, [id, getSingle]);
+
+  // Auto-increment views when page loads (only once per visit)
+  useEffect(() => {
+    if (post && !viewsIncremented) {
+      const incrementView = async () => {
+        try {
+          const postRef = doc(db, 'blogs', post.id);
+          await updateDoc(postRef, {
+            views: increment(1)
+          });
+          // Update local state to show +1 view immediately
+          setPost(prev => prev ? { ...prev, views: (prev.views || 0) + 1 } : null);
+        } catch (error) {
+          console.error('Error incrementing view:', error);
+        }
+        setViewsIncremented(true);
+      };
+
+      incrementView();
+    }
+  }, [post, viewsIncremented]);
 
   if (!post) {
     return (

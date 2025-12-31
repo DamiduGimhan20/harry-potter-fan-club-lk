@@ -60,9 +60,9 @@ export function Navbar() {
               damping: 30
             }} />}
               </Link>)}
-            <Link to="/admin" className="px-4 py-2 text-xs font-medium text-slate-400 border border-slate-700 rounded hover:bg-slate-800 hover:text-white transition-colors">
+            {/*<Link to="/admin" className="px-4 py-2 text-xs font-medium text-slate-400 border border-slate-700 rounded hover:bg-slate-800 hover:text-white transition-colors">
               Admin
-            </Link>
+            </Link>*/}
           </div>
 
           {/* Mobile Menu Button */}
@@ -90,9 +90,9 @@ export function Navbar() {
               {navLinks.map(link => <Link key={link.name} to={link.path} className={`block px-3 py-3 rounded-md text-base font-medium ${location.pathname === link.path ? 'bg-slate-800 text-gold' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
                   {link.name}
                 </Link>)}
-              <Link to="/admin" className="block px-3 py-3 rounded-md text-base font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
+              {/*<Link to="/admin" className="block px-3 py-3 rounded-md text-base font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
                 Admin Dashboard
-              </Link>
+              </Link>*/}
             </div>
           </motion.div>}
       </AnimatePresence>
