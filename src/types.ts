@@ -45,3 +45,12 @@ export interface Spell {
   notes: string | null;
   likes?: number;
 }
+
+export interface Comment {
+  id: string;
+  name: string;
+  message: string;
+  date: string; // ISO string
+  parentId: string; // theory or blog id
+  parentType: 'theory' | 'blog';
+}

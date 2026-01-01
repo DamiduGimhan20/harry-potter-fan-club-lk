@@ -1,10 +1,9 @@
-// src/components/SpellCard.tsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Wand2, Heart } from 'lucide-react';
 import { Spell } from '../types';
 import { db } from '../firebase';
-import { doc, updateDoc, increment } from 'firebase/firestore';
+import { doc, updateDoc, increment, setDoc, getDoc } from 'firebase/firestore';
 
 interface SpellCardProps {
   spell: Spell;
@@ -27,11 +26,28 @@ export function SpellCard({ spell, index }: SpellCardProps) {
 
     try {
       const spellRef = doc(db, 'spells', spell.id);
-      await updateDoc(spellRef, { likes: increment(1) });
+      const docSnap = await getDoc(spellRef);
+
+      if (docSnap.exists()) {
+        // Document exists → just increment likes
+        await updateDoc(spellRef, { likes: increment(1) });
+      } else {
+        // Document doesn't exist → create it with likes = 1
+        await setDoc(spellRef, {
+          name: spell.name,
+          incantation: spell.incantation,
+          type: spell.type,
+          effect: spell.effect,
+          notes: spell.notes,
+          likes: 1
+        });
+      }
     } catch (error) {
       console.error('Error liking spell:', error);
+      // Revert on error
       setLikes(likes);
       setIsLiked(false);
+      alert('Could not like spell – try again later.');
     }
 
     setTimeout(() => setIsAnimating(false), 600);
@@ -44,45 +60,47 @@ export function SpellCard({ spell, index }: SpellCardProps) {
       transition={{ delay: index * 0.1 }}
       className="group relative bg-slate-800/50 rounded-xl overflow-hidden border border-slate-700 hover:border-gold/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(212,175,55,0.1)] h-full flex flex-col"
     >
-      <div className="p-6 flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-2xl font-bold text-white font-cinzel group-hover:text-gold transition-colors">
+      <div className="p-5 sm:p-6 flex-1 flex flex-col">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white font-cinzel group-hover:text-gold transition-colors line-clamp-2">
             {spell.name}
           </h3>
-          <Wand2 className="h-6 w-6 text-gold" />
+          <Wand2 className="h-5 w-5 sm:h-6 sm:w-6 text-gold flex-shrink-0" />
         </div>
 
         {spell.incantation && (
-          <p className="text-gold italic mb-2 text-lg">
+          <p className="text-gold italic mb-2 text-sm sm:text-base md:text-lg line-clamp-1">
             "{spell.incantation}"
           </p>
         )}
 
-        <p className="text-sm text-slate-400 mb-2">
+        <p className="text-xs sm:text-sm text-slate-400 mb-2">
           <span className="font-medium text-gold">Type:</span> {spell.type}
         </p>
 
-        <p className="text-slate-300 flex-1">
+        <p className="text-slate-300 text-sm sm:text-base flex-1 line-clamp-4 sm:line-clamp-5">
           {spell.effect}
         </p>
 
         {spell.notes && (
-          <p className="text-sm text-slate-400 mt-4 italic border-t border-slate-700 pt-4">
+          <p className="text-xs sm:text-sm text-slate-400 mt-3 sm:mt-4 italic border-t border-slate-700 pt-3 sm:pt-4 line-clamp-3">
             {spell.notes}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-700/50">
-          <button
+        {/* Like Button – Fixed nesting (no button inside button) */}
+        <div className="flex items-center justify-between mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-700/50">
+          <div 
             onClick={handleLike}
-            disabled={isLiked}
-            className="flex items-center space-x-2 text-slate-400 hover:text-red-500 transition-colors disabled:opacity-50"
+            className="flex items-center space-x-2 text-slate-400 hover:text-red-500 transition-colors cursor-pointer disabled:opacity-50"
+            role="button"
+            aria-label="Like this spell"
           >
             <motion.div animate={isAnimating ? { scale: [1, 1.4, 1] } : {}}>
-              <Heart className={`h-5 w-5 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
             </motion.div>
-            <span className="text-sm">{likes}</span>
-          </button>
+            <span className="text-xs sm:text-sm">{likes}</span>
+          </div>
 
           <span className="text-xs text-gold uppercase tracking-wider">
             Magical Spell

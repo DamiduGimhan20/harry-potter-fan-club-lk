@@ -1,4 +1,4 @@
-// src/pages/TheoryDetailPage.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -6,6 +6,8 @@ import { ArrowLeft, Heart, User, Calendar, Share2 } from 'lucide-react';
 import { useFirestore } from '../hooks/useFirestore';
 import { Theory } from '../types';
 import { MagicalParticles } from '../components/MagicalParticles';
+import { CommentSection } from '../components/CommentSection';
+import { ShareButtons } from '../components/ShareButtons';
 
 export function TheoryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -48,6 +50,10 @@ export function TheoryDetailPage() {
           <div className="mt-8 flex justify-end">
             <button className="flex items-center text-gold hover:text-white"><Share2 className="h-5 w-5 mr-2" /> Share</button>
           </div>
+          <ShareButtons 
+            url={window.location.href} 
+            title={theory.title + ' - HP Fan Club LK'} 
+          />
         </motion.article>
 
         <h2 className="text-2xl font-bold text-white mt-12 mb-6 font-cinzel">Related Theories</h2>
@@ -60,6 +66,7 @@ export function TheoryDetailPage() {
           ))}
         </div>
       </div>
+      <CommentSection parentId={theory.id} parentType="theory" />
     </div>
   );
 }

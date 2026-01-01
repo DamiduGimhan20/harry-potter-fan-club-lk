@@ -1,4 +1,3 @@
-// src/pages/BlogDetailPage.tsx  (UPDATED WITH AUTO VIEW INCREMENT)
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -9,6 +8,8 @@ import { BlogPost } from '../types';
 import { MagicalParticles } from '../components/MagicalParticles';
 import { db } from '../firebase';
 import { doc, updateDoc, increment } from 'firebase/firestore';
+import { CommentSection } from '../components/CommentSection';
+import { ShareButtons } from '../components/ShareButtons';
 
 export function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -167,6 +168,11 @@ export function BlogDetailPage() {
           </div>
         )}
       </div>
+      <CommentSection parentId={post.id} parentType="blog" />
+      <ShareButtons 
+        url={window.location.href} 
+        title={post.title + ' - HP Fan Club LK'} 
+      />
     </div>
   );
 }

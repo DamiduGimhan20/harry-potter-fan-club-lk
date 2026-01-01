@@ -1,8 +1,9 @@
-// src/pages/HouseDetailPage.tsx
+// src/pages/HouseDetailPage.tsx  (FIXED – Crest Perfect on Mobile + Desktop)
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Shield, Users, Home } from 'lucide-react';
+import { ArrowLeft, Shield, Users, Home, Sparkles } from 'lucide-react';
 import { MagicalParticles } from '../components/MagicalParticles';
 
 const HOUSES_DATA = {
@@ -66,95 +67,139 @@ export function HouseDetailPage() {
   const house = id ? HOUSES_DATA[id as keyof typeof HOUSES_DATA] : null;
 
   if (!house) {
-    return <div className="text-center py-20 text-white text-2xl">House not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white text-2xl">
+        House not found
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 relative bg-slate-900">
       <MagicalParticles />
-      <div className="max-w-6xl mx-auto relative z-10">
-        <button onClick={() => navigate('/houses')} className="flex items-center text-gold hover:text-white mb-8">
+      <div className="max-w-7xl mx-auto relative z-10">
+        <button 
+          onClick={() => navigate('/houses')} 
+          className="flex items-center text-gold hover:text-white transition-colors mb-8"
+        >
           <ArrowLeft className="h-5 w-5 mr-2" />
           Back to Houses
         </button>
 
-        {/* Hero with Common Room Image */}
+        {/* Hero Section – Fixed Crest on Mobile */}
         <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
           className="relative rounded-3xl overflow-hidden shadow-2xl mb-12"
         >
           <img 
             src={house.commonRoom} 
             alt={`${house.name} Common Room`} 
-            className="w-full h-96 md:h-[32rem] object-cover"
+            className="w-full h-64 sm:h-80 md:h-96 lg:h-[32rem] object-cover"
           />
           <div className={`absolute inset-0 bg-gradient-to-br ${house.colors} opacity-60`} />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70" />
-          
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center">
-            <img src={house.crest} alt={`${house.name} Crest`} className="w-32 h-32 mx-auto mb-6 drop-shadow-2xl" />
-            <h1 className="text-6xl md:text-8xl font-bold text-white font-cinzel drop-shadow-2xl">
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 sm:p-6">
+            {/* Responsive Crest – Perfect Size on All Devices */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mb-4 sm:mb-6"
+            >
+              <img 
+                src={house.crest} 
+                alt={`${house.name} Crest`} 
+                className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain drop-shadow-2xl"
+              />
+            </motion.div>
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white font-cinzel drop-shadow-2xl leading-tight">
               {house.name}
             </h1>
-            <p className="text-2xl text-gold mt-4 italic">"{house.description}"</p>
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gold mt-3 sm:mt-4 italic max-w-2xl drop-shadow-lg px-4">
+              "{house.description}"
+            </p>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Traits & Info */}
-          <div className="space-y-8">
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
-              <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
-                <Shield className="h-8 w-8 text-gold mr-3" />
-                Core Traits
-              </h2>
-              <ul className="space-y-3">
-                {house.traits.map(trait => (
-                  <li key={trait} className="text-xl text-slate-300 flex items-center">
-                    <span className="text-gold mr-3">✦</span>
-                    {trait}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
-              <h2 className="text-2xl font-bold text-white mb-4 font-cinzel">House Details</h2>
-              <div className="space-y-4 text-slate-300">
-                <p><span className="text-gold font-medium">Founder:</span> {house.founder}</p>
-                <p><span className="text-gold font-medium">Mascot:</span> {house.mascot}</p>
-                <p><span className="text-gold font-medium">Element:</span> {house.element}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Center Column - Common Room Description */}
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
-            <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
-              <Home className="h-8 w-8 text-gold mr-3" />
-              Common Room
+        {/* Responsive Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Traits Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.2 }}
+            className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-slate-700"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-gold mr-3" />
+              Core Traits
             </h2>
-            <p className="text-slate-300 text-lg leading-relaxed">
-              {house.commonRoomDesc}
-            </p>
-          </div>
-
-          {/* Right Column - Notable Members */}
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700">
-            <h2 className="text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
-              <Users className="h-8 w-8 text-gold mr-3" />
-              Notable Members
-            </h2>
-            <ul className="space-y-3">
-              {house.notableMembers.map(member => (
-                <li key={member} className="text-slate-300 flex items-center">
-                  <span className="text-gold mr-3">•</span>
-                  {member}
+            <ul className="space-y-3 sm:space-y-4">
+              {house.traits.map(trait => (
+                <li key={trait} className="text-base sm:text-lg text-slate-300 flex items-center">
+                  <span className="text-gold mr-3 text-xl">✦</span>
+                  {trait}
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
+
+          {/* House Details Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.3 }}
+            className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-slate-700"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Shield className="h-7 w-7 sm:h-8 sm:w-8 text-gold mr-3" />
+              House Details
+            </h2>
+            <div className="space-y-4 text-slate-300">
+              <p className="text-sm sm:text-base"><span className="text-gold font-medium">Founder:</span> {house.founder}</p>
+              <p className="text-sm sm:text-base"><span className="text-gold font-medium">Mascot:</span> {house.mascot}</p>
+              <p className="text-sm sm:text-base"><span className="text-gold font-medium">Element:</span> {house.element}</p>
+            </div>
+          </motion.div>
+
+          {/* Common Room Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.4 }}
+            className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-slate-700 md:col-span-2 lg:col-span-1"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Home className="h-7 w-7 sm:h-8 sm:w-8 text-gold mr-3" />
+              Common Room
+            </h2>
+            <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed">
+              {house.commonRoomDesc}
+            </p>
+          </motion.div>
+
+          {/* Notable Members Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.5 }}
+            className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-slate-700 md:col-span-2 lg:col-span-3"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 font-cinzel flex items-center">
+              <Users className="h-7 w-7 sm:h-8 sm:w-8 text-gold mr-3" />
+              Notable Members
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {house.notableMembers.map(member => (
+                <div key={member} className="bg-slate-700/50 rounded-lg p-3 sm:p-4 text-center hover:bg-slate-700 transition-colors">
+                  <p className="text-slate-300 text-sm sm:text-base">{member}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

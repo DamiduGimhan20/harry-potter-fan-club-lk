@@ -1,5 +1,3 @@
-// src/pages/SpellsPage.tsx  (FULL WITH ALL 100+ SPELLS FROM THE SITE)
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
@@ -119,7 +117,7 @@ const SPELLS = [
   { id: 'tarantallegra', name: 'Tarantallegra', incantation: 'Tarantallegra', type: 'Charm', effect: 'forces the target’s legs to dance uncontrollably', notes: null },
   { id: 'tergeo', name: 'Tergeo', incantation: 'Tergeo', type: 'Charm', effect: 'siphons liquid or dust from a surface', notes: null },
   { id: 'wingardium-leviosa', name: 'Wingardium Leviosa', incantation: 'Wingardium Leviosa', type: 'Charm', effect: 'levitates objects', notes: null },
-  // That's all 100+ from the site – I included every one!
+  
 ];
 
 export function SpellsPage() {
@@ -137,29 +135,31 @@ export function SpellsPage() {
       <MagicalParticles />
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white font-cinzel mb-4">Spells & Charms</h1>
-          <p className="text-slate-400 text-lg">Master the ancient arts of wizardry – over 100 spells!</p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white font-cinzel mb-4">Spells & Charms</h1>
+          <p className="text-slate-400 text-base sm:text-lg">Master the ancient arts of wizardry – over 100 spells!</p>
         </motion.div>
 
-        <div className="max-w-md mx-auto mb-12 relative">
+        {/* Search Bar – Responsive */}
+        <div className="max-w-xl mx-auto mb-12 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
           <input
             type="text"
             placeholder="Search by name, effect, incantation..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-800 border border-slate-700 rounded-full py-3 px-10 text-white placeholder-slate-400 focus:outline-none focus:border-gold transition-colors"
+            className="w-full bg-slate-800 border border-slate-700 rounded-full py-3 px-10 text-white placeholder-slate-400 focus:outline-none focus:border-gold transition-colors text-sm sm:text-base"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
           {filteredSpells.map((spell, index) => (
             <SpellCard key={spell.id} spell={spell} index={index} />
           ))}
         </div>
 
         {filteredSpells.length === 0 && (
-          <p className="text-center text-slate-500 mt-20 text-xl">
+          <p className="text-center text-slate-500 mt-20 text-lg sm:text-xl">
             No spells found – try "Accio" or "Lumos"!
           </p>
         )}

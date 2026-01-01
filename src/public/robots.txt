@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://harrypotterfanclublk.netlify.app/sitemap.xml

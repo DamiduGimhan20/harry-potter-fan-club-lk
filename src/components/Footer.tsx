@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Facebook, Twitter, Instagram, Mail , } from 'lucide-react';
+import { VisitorCounter } from './VisitorCounter';
 export function Footer() {
   return <footer className="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,6 +100,9 @@ export function Footer() {
         </div>
 
         <div className="border-t border-slate-800 pt-8 text-center">
+            <div className="mt-8 mb-4">
+              <VisitorCounter />
+            </div>
           <p className="text-slate-500 text-xs">
             © {new Date().getFullYear()} Harry Potter Fan Club LK. All rights
             reserved. This is a fan-made site and is not affiliated with J.K.
